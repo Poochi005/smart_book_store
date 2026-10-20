@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block title %}Admin Dashboard{% endblock %}
+{% block content %}
+{% include "admin_nav.html" %}
+<h1>Admin Dashboard</h1>
+<div class="stats">
+  <div class="stat"><b>{{ stats.books }}</b>Books</div>
+  <div class="stat"><b>{{ stats.customers }}</b>Customers</div>
+  <div class="stat"><b>{{ stats.orders }}</b>Orders</div>
+  <div class="stat"><b>&#8377;{{ '%.2f'|format(stats.revenue) }}</b>Revenue</div>
+</div>
+<h2>Low stock (5 or fewer)</h2>
+{% if not low %}<p class="muted">All books are well stocked.</p>{% else %}
+<table class="table"><tr><th>Title</th><th>Stock</th><th></th></tr>
+{% for b in low %}<tr><td>{{ b['title'] }}</td><td>{{ b['stock'] }}</td><td><a href="{{ url_for('book_edit', book_id=b['id']) }}">Edit</a></td></tr>{% endfor %}
+</table>{% endif %}
+{% endblock %}

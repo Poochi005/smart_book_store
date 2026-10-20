@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block title %}Order {{ order['order_no'] }}{% endblock %}
+{% block content %}
+<h1>Order {{ order['order_no'] }}</h1>
+<div class="panel">
+  <p>Customer: {{ order['customer'] }} &middot; Placed: {{ order['created_at'] }}</p>
+  <p>Status: <span class="badge {{ order['status']|lower }}">{{ order['status'] }}</span> &middot; Payment: {{ order['payment_method'] }}</p>
+  <p>Address: {{ order['address'] }}</p>
+  <table class="table">
+    <tr><th>Book</th><th>Price</th><th>Qty</th><th>Subtotal</th></tr>
+    {% for i in items %}<tr><td>{{ i['title'] }}</td><td>&#8377;{{ '%.2f'|format(i['price']) }}</td><td>{{ i['quantity'] }}</td><td>&#8377;{{ '%.2f'|format(i['price'] * i['quantity']) }}</td></tr>{% endfor %}
+    <tr class="total"><td colspan="3">Total</td><td>&#8377;{{ '%.2f'|format(order['total']) }}</td></tr>
+  </table>
+  {% if order['status'] == 'Placed' and order['user_id'] == me['id'] %}
+  <form method="post" action="{{ url_for('order_cancel', order_id=order['id']) }}" data-confirm="Cancel this order?">
+    <input type="hidden" name="_csrf" value="{{ csrf_token }}">
+    <button class="btn danger" type="submit">Cancel order</button>
+  </form>
+  {% endif %}
+</div>
+{% endblock %}

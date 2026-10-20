@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block title %}Manage Books{% endblock %}
+{% block content %}
+{% include "admin_nav.html" %}
+<h1>Manage Books</h1>
+<a class="btn" href="{{ url_for('book_new') }}">+ Add book</a>
+<table class="table">
+  <tr><th>ID</th><th>Title</th><th>Author</th><th>Category</th><th>Price</th><th>Stock</th><th></th></tr>
+  {% for b in books %}
+  <tr><td>{{ b['id'] }}</td><td>{{ b['title'] }}</td><td>{{ b['author'] }}</td><td>{{ b['category'] or '-' }}</td>
+    <td>&#8377;{{ '%.2f'|format(b['price']) }}</td><td>{{ b['stock'] }}</td>
+    <td class="row">
+      <a class="btn small" href="{{ url_for('book_edit', book_id=b['id']) }}">Edit</a>
+      <form method="post" action="{{ url_for('book_delete', book_id=b['id']) }}" data-confirm="Delete this book?">
+        <input type="hidden" name="_csrf" value="{{ csrf_token }}">
+        <button class="btn small danger" type="submit">Delete</button>
+      </form>
+    </td></tr>
+  {% endfor %}
+</table>
+{% endblock %}

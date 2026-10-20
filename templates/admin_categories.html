@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block title %}Categories{% endblock %}
+{% block content %}
+{% include "admin_nav.html" %}
+<h1>Categories</h1>
+<form method="post" class="row">
+  <input type="hidden" name="_csrf" value="{{ csrf_token }}">
+  <input type="text" name="name" placeholder="New category name" required>
+  <button class="btn" type="submit">Add</button>
+</form>
+<table class="table"><tr><th>Name</th><th>Books</th></tr>
+{% for c in categories %}<tr><td>{{ c['name'] }}</td><td>{{ c['n'] }}</td></tr>{% endfor %}
+</table>
+{% endblock %}

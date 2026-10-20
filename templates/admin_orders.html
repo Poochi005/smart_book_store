@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block title %}All Orders{% endblock %}
+{% block content %}
+{% include "admin_nav.html" %}
+<h1>All Orders</h1>
+<table class="table">
+  <tr><th>Order No</th><th>Customer</th><th>Date</th><th>Total</th><th>Status</th><th>Update</th></tr>
+  {% for o in orders %}
+  <tr>
+    <td><a href="{{ url_for('order_detail', order_id=o['id']) }}">{{ o['order_no'] }}</a></td>
+    <td>{{ o['customer'] }}</td><td>{{ o['created_at'] }}</td><td>&#8377;{{ '%.2f'|format(o['total']) }}</td>
+    <td><span class="badge {{ o['status']|lower }}">{{ o['status'] }}</span></td>
+    <td>{% if o['status'] != 'Cancelled' %}
+      <form method="post" action="{{ url_for('order_status', order_id=o['id']) }}" class="row">
+        <input type="hidden" name="_csrf" value="{{ csrf_token }}">
+        <select name="status">
+          {% for s in ['Placed','Shipped','Delivered','Cancelled'] %}<option {{ 'selected' if s == o['status'] }}>{{ s }}</option>{% endfor %}
+        </select>
+        <button class="btn small" type="submit">Save</button>
+      </form>{% else %}-{% endif %}</td>
+  </tr>
+  {% endfor %}
+</table>
+{% endblock %}

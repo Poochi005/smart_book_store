@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block title %}{{ 'Edit' if book else 'Add' }} Book{% endblock %}
+{% block content %}
+{% include "admin_nav.html" %}
+<div class="panel">
+  <h1>{{ 'Edit' if book else 'Add' }} Book</h1>
+  <form method="post" data-validate>
+    <input type="hidden" name="_csrf" value="{{ csrf_token }}">
+    <label>Title <input type="text" name="title" value="{{ book['title'] if book }}" required></label>
+    <label>Author <input type="text" name="author" value="{{ book['author'] if book }}" required></label>
+    <label>ISBN <input type="text" name="isbn" value="{{ book['isbn'] or '' if book }}"></label>
+    <label>Category
+      <select name="category_id">
+        <option value="">-- none --</option>
+        {% for c in categories %}<option value="{{ c['id'] }}" {{ 'selected' if book and book['category_id'] == c['id'] }}>{{ c['name'] }}</option>{% endfor %}
+      </select>
+    </label>
+    <label>Price (&#8377;) <input type="number" step="0.01" min="0" name="price" value="{{ book['price'] if book }}" required></label>
+    <label>Stock <input type="number" min="0" name="stock" value="{{ book['stock'] if book }}" required></label>
+    <label>Description <textarea name="description" rows="4">{{ book['description'] or '' if book }}</textarea></label>
+    <button class="btn" type="submit">Save</button>
+    <a href="{{ url_for('admin_books') }}">Cancel</a>
+  </form>
+</div>
+{% endblock %}

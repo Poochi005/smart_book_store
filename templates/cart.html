@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block title %}Your Cart{% endblock %}
+{% block content %}
+<h1>Your Cart</h1>
+{% if not lines %}
+  <p class="muted">Your cart is empty. <a href="{{ url_for('index') }}">Browse books</a></p>
+{% else %}
+<table class="table">
+  <tr><th>Book</th><th>Price</th><th>Qty</th><th>Subtotal</th></tr>
+  {% for l in lines %}
+  <tr>
+    <td>{{ l.book['title'] }}</td>
+    <td>&#8377;{{ '%.2f'|format(l.book['price']) }}</td>
+    <td>
+      <form method="post" action="{{ url_for('cart_update', book_id=l.book['id']) }}" class="row">
+        <input type="hidden" name="_csrf" value="{{ csrf_token }}">
+        <input type="number" name="qty" value="{{ l.qty }}" min="0" max="{{ l.book['stock'] }}" class="qty">
+        <button class="btn small" type="submit">Update</button>
+      </form>
+    </td>
+    <td>&#8377;{{ '%.2f'|format(l.subtotal) }}</td>
+  </tr>
+  {% endfor %}
+  <tr class="total"><td colspan="3">Total</td><td>&#8377;{{ '%.2f'|format(total) }}</td></tr>
+</table>
+<p class="muted">Set quantity to 0 to remove an item.</p>
+<a class="btn" href="{{ url_for('checkout') }}">Proceed to checkout</a>
+{% endif %}
+{% endblock %}

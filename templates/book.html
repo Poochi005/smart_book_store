@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block title %}{{ book['title'] }}{% endblock %}
+{% block content %}
+<div class="panel">
+  <h1>{{ book['title'] }}</h1>
+  <p class="muted">by {{ book['author'] }}</p>
+  <table class="kv">
+    <tr><th>Category</th><td>{{ book['category'] or '-' }}</td></tr>
+    <tr><th>ISBN</th><td>{{ book['isbn'] or '-' }}</td></tr>
+    <tr><th>Price</th><td class="price">&#8377;{{ '%.2f'|format(book['price']) }}</td></tr>
+    <tr><th>Availability</th><td>{% if book['stock'] > 0 %}<span class="badge ok">{{ book['stock'] }} in stock</span>{% else %}<span class="badge out">Out of stock</span>{% endif %}</td></tr>
+  </table>
+  <p>{{ book['description'] }}</p>
+  {% if book['stock'] > 0 %}
+  <form method="post" action="{{ url_for('cart_add', book_id=book['id']) }}" class="row">
+    <input type="hidden" name="_csrf" value="{{ csrf_token }}">
+    <input type="number" name="qty" value="1" min="1" max="{{ book['stock'] }}" class="qty">
+    <button class="btn" type="submit">Add to cart</button>
+  </form>
+  {% endif %}
+</div>
+{% endblock %}

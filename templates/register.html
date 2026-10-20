@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block title %}Register{% endblock %}
+{% block content %}
+<div class="panel narrow">
+  <h1>Create an account</h1>
+  <form method="post" data-validate>
+    <input type="hidden" name="_csrf" value="{{ csrf_token }}">
+    <label>Full name <input type="text" name="name" required></label>
+    <label>Email <input type="email" name="email" required></label>
+    <label>Password (min 6 characters) <input type="password" name="password" minlength="6" required></label>
+    <button class="btn" type="submit">Register</button>
+  </form>
+</div>
+{% endblock %}
