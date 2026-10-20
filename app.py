@@ -508,6 +508,11 @@ def bad_request(e):
     return render_template("error.html", code=400, msg=getattr(e, "description", "Bad request")), 400
 
 
-if __name__ == "__main__":
+
+# Initialize the database when Render/Gunicorn starts.
+with app.app_context():
     init_db()
+
+if __name__ == "__main__":
     app.run(debug=True)
+
